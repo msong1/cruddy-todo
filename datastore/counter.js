@@ -18,7 +18,7 @@ const zeroPaddedNumber = (num) => {
 const readCounter = (callback) => {
   fs.readFile(exports.counterFile, (err, fileData) => {
     if (err) {
-      callback(null, 0);
+      callback(null, 0); // then( (err, data) => { do something(data)}
     } else {
       callback(null, Number(fileData));
     }
@@ -38,12 +38,49 @@ const writeCounter = (count, callback) => {
 
 // Public API - Fix this function //////////////////////////////////////////////
 
-exports.getNextUniqueId = () => {
-  counter = counter + 1;
-  return zeroPaddedNumber(counter);
+exports.getNextUniqueId = (callback) => {
+  readCounter((err, data) => {
+    data++;
+    writeCounter(data, callback);
+  });
 };
+// get counter from txt file
+// const promise = new Promise((resolve, reject) => {
+//   readCounter((err, data) => (resolve(data)));
+// });
+
+// promise
+//   .then((result) => {
+//     counter = result;
+//     // increment counter
+//     counter = counter + 1;
+//     return counter;
+//     // update the counter on the txt file on the local database
+//     //writeCounter(counter, console.log);
+//     // return 1;
+//   })
+//   .then((result) => {
+//     // console.log('result',result);
+//     // update the counter on the txt file on the local database
+//     writeCounter(result, () => (console.log));
+//     // return the zero padded number
+//     return zeroPaddedNumber(result);
+//   });
+//   .catch(() => { console.log('failed'); });
+// counter = readCounter((err, counter) => { return counter});
+
+// debugger;
 
 
+
+// increase by one with callback function
+// counter = counter + 1;
+// update the counter on the txt file on the local database
+
+// return the zero padded number
+// return resultOut;
+
+// testing====
 
 // Configuration -- DO NOT MODIFY //////////////////////////////////////////////
 
