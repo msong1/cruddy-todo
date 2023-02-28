@@ -42,20 +42,37 @@ exports.readAll = (callback) => {
   // callback(null, data);
 
   // To do this, you will need to read the dataDir directory and build a list of files.
-  let data = [];
+  let todoList = [];
   fs.readdir(this.dataDir, (err, files) => {
     if (err) {
       throw ('Error at .readAll:', err);
     } else {
-      data = files.map(fileName => { // '00001.txt'
-        fileName = fileName.slice(0, 5);
-        return {id: fileName, text: fileName};
+      // todoList = files.map(fileName => { // '00001.txt'
+      //   fileName = fileName.slice(0, 5);
+      //   return {id: fileName, text: fileName};
+      //   // Create Promise
+      //   // readFile
+      //   // execute then/all
+      // });
+      // callback(null, todoList);
+
+      //===Refactor====
+      todoList = files.map(fileName => {
+        return new Promise((resolve, reject) => {
+          fs.readFile(path.join(this.dataDir, fileName), (err, data) => {
+            if (err) {
+              reject(new Error(`No item with id: ${id}`));
+            } else {
+              resolve({ id: fileName.slice(0, 5), text: data.toString() });
+            }
+          }
+          );
+        });
       });
-      callback(null, data);
+      Promise.all(todoList).then(list => { callback(null, list); });
     }
 
   });
-
 };
 
 exports.readOne = (id, callback) => {
